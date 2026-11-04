@@ -1,0 +1,13 @@
+build/
+*.elf
+*.o
+__pycache__/
+.pytest_cache/
+venv/
+
+# misc
+*.pyc
+*.log
+.DS_Store
+crashes/
+asan_logs/
