@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install system toolchain
+        run: sudo apt-get update && sudo apt-get install -y gcc g++ binutils
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+      - name: Build benchmark binaries
+        run: ./benchmarks/build.sh
+      - name: Run test suite
+        run: pytest -q --tb=short
+      - name: Generate security audit report
+        run: python3 reports/report_generator.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report
+          path: |
+            reports/security_audit_report.md
+            reports/security_audit.sarif

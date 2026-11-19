@@ -1,0 +1,277 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "ELF-Binary-Triage-Agent",
+          "informationUri": "https://github.com/",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "CWE-121",
+              "name": "Stack-based Buffer Overflow",
+              "shortDescription": {
+                "text": "Stack-based Buffer Overflow"
+              },
+              "fullDescription": {
+                "text": "An unbounded copy (strcpy/strcat/gets) writes attacker-controlled data into a fixed-size stack buffer with no length check, allowing the saved return address and stack canary to be overwritten."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/121.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-121"
+                ]
+              }
+            },
+            {
+              "id": "CWE-416",
+              "name": "Use After Free",
+              "shortDescription": {
+                "text": "Use After Free"
+              },
+              "fullDescription": {
+                "text": "A pointer is dereferenced after the memory it refers to has been freed, because a second (global/aliased) reference to the same allocation was never cleared."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/416.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-416"
+                ]
+              }
+            },
+            {
+              "id": "CWE-134",
+              "name": "Uncontrolled Format String",
+              "shortDescription": {
+                "text": "Uncontrolled Format String"
+              },
+              "fullDescription": {
+                "text": "Attacker-controlled data is passed as the *format* argument to a printf-family function, letting %n/%s/%x specifiers read or write arbitrary stack memory."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/134.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-134"
+                ]
+              }
+            },
+            {
+              "id": "CWE-190",
+              "name": "Integer Overflow to Buffer Overflow",
+              "shortDescription": {
+                "text": "Integer Overflow to Buffer Overflow"
+              },
+              "fullDescription": {
+                "text": "A multiplication feeding an allocation size (count * element_size) can wrap a fixed-width integer, producing an undersized allocation that a subsequent write-loop then overflows."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/190.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-190"
+                ]
+              }
+            },
+            {
+              "id": "CWE-78",
+              "name": "OS Command Injection",
+              "shortDescription": {
+                "text": "OS Command Injection"
+              },
+              "fullDescription": {
+                "text": "Untrusted input is concatenated into a shell command string passed to system()/popen(), letting shell metacharacters (`;`, `|`, `` ` ``, `$()`) inject arbitrary additional commands."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/78.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-78"
+                ]
+              }
+            },
+            {
+              "id": "CWE-193",
+              "name": "Off-by-One Error",
+              "shortDescription": {
+                "text": "Off-by-One Error"
+              },
+              "fullDescription": {
+                "text": "A copy loop uses an inclusive bound (`i <= len`) against a fixed-size buffer, writing one byte past its end on inputs whose length equals the buffer's capacity."
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/193.html",
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-193"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CWE-121",
+          "level": "error",
+          "message": {
+            "text": "Stack-based Buffer Overflow in cve_sim_stack_overflow: An unbounded copy (strcpy/strcat/gets) writes attacker-controlled data into a fixed-size stack buffer with no length check, allowing the saved return address and stack canary to be overwritten. Dynamic verdict: CRASHED (stack-buffer-overflow) (exploit_confirmed=True)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "benchmarks/cve_sim_stack_overflow.c"
+                },
+                "region": {
+                  "startLine": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "poc_argv": [
+              "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            ],
+            "asan_summary": "stack-buffer-overflow ../../../../src/libsanitizer/asan/asan_interceptors.cpp:563 in strcpy",
+            "exploit_confirmed": true
+          }
+        },
+        {
+          "ruleId": "CWE-416",
+          "level": "error",
+          "message": {
+            "text": "Use After Free in cve_sim_heap_uaf: A pointer is dereferenced after the memory it refers to has been freed, because a second (global/aliased) reference to the same allocation was never cleared. Dynamic verdict: CRASHED (heap-use-after-free) (exploit_confirmed=True)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "benchmarks/cve_sim_heap_uaf.c"
+                },
+                "region": {
+                  "startLine": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "poc_argv": [
+              "poc-task-name"
+            ],
+            "asan_summary": "heap-use-after-free benchmarks/cve_sim_heap_uaf.c:39 in print_task",
+            "exploit_confirmed": true
+          }
+        },
+        {
+          "ruleId": "CWE-134",
+          "level": "error",
+          "message": {
+            "text": "Uncontrolled Format String in cve_sim_format_string: Attacker-controlled data is passed as the *format* argument to a printf-family function, letting %n/%s/%x specifiers read or write arbitrary stack memory. Dynamic verdict: CRASHED (SEGV) (exploit_confirmed=True)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "benchmarks/cve_sim_format_string.c"
+                },
+                "region": {
+                  "startLine": 17
+                }
+              }
+            }
+          ],
+          "properties": {
+            "poc_argv": [
+              "%p %p %p %p %n %s %s"
+            ],
+            "asan_summary": "SEGV ../../../../src/libsanitizer/asan/asan_interceptors_memintrinsics.h:37 in QuickCheckForUnpoisonedRegion",
+            "exploit_confirmed": true
+          }
+        },
+        {
+          "ruleId": "CWE-190",
+          "level": "error",
+          "message": {
+            "text": "Integer Overflow to Buffer Overflow in cve_sim_integer_overflow: A multiplication feeding an allocation size (count * element_size) can wrap a fixed-width integer, producing an undersized allocation that a subsequent write-loop then overflows. Dynamic verdict: CRASHED (heap-buffer-overflow) (exploit_confirmed=True)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "benchmarks/cve_sim_integer_overflow.c"
+                },
+                "region": {
+                  "startLine": 20
+                }
+              }
+            }
+          ],
+          "properties": {
+            "poc_argv": [
+              "67108864"
+            ],
+            "asan_summary": "heap-buffer-overflow benchmarks/cve_sim_integer_overflow.c:37 in main",
+            "exploit_confirmed": true
+          }
+        },
+        {
+          "ruleId": "CWE-78",
+          "level": "error",
+          "message": {
+            "text": "OS Command Injection in cve_sim_command_injection: Untrusted input is concatenated into a shell command string passed to system()/popen(), letting shell metacharacters (`;`, `|`, `` ` ``, `$()`) inject arbitrary additional commands. Dynamic verdict: NO_CRASH (exploit_confirmed=True)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "benchmarks/cve_sim_command_injection.c"
+                },
+                "region": {
+                  "startLine": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "poc_argv": [
+              "localhost; echo POC-MARKER-80f023c9 #"
+            ],
+            "asan_summary": null,
+            "exploit_confirmed": true
+          }
+        },
+        {
+          "ruleId": "CWE-193",
+          "level": "error",
+          "message": {
+            "text": "Off-by-One Error in cve_sim_off_by_one: A copy loop uses an inclusive bound (`i <= len`) against a fixed-size buffer, writing one byte past its end on inputs whose length equals the buffer's capacity. Dynamic verdict: CRASHED (stack-buffer-overflow) (exploit_confirmed=True)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "benchmarks/cve_sim_off_by_one.c"
+                },
+                "region": {
+                  "startLine": 17
+                }
+              }
+            }
+          ],
+          "properties": {
+            "poc_argv": [
+              "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+            ],
+            "asan_summary": "stack-buffer-overflow benchmarks/cve_sim_off_by_one.c:24 in copy_label",
+            "exploit_confirmed": true
+          }
+        }
+      ]
+    }
+  ]
+}
